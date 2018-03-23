@@ -3,7 +3,8 @@
   "description": "study-mtg",
   "scripts": {
     "slide:es6": "cleaver es6/doc.md && open doc-cleaver.html",
-    "slide:react": "cleaver react-flux-redux/doc.md && open doc-cleaver.html"
+    "slide:react": "cleaver react-flux-redux/doc.md && open doc-cleaver.html",
+    "srw": "cleaver watch react-flux-redux/doc.md"
   },
   "repository": {
     "type": "git",

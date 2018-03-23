@@ -30,6 +30,10 @@ Facebook 製のライブラリで MVC でいうところのビューの部分
 
 ### 主な特長3つ
 
+- JUST THE UI
+- VirtualDOM
+- DATA FLOW
+
 --
 
 **JUST THE UI**
@@ -39,14 +43,14 @@ Facebook 製のライブラリで MVC でいうところのビューの部分
 * ほかのフレームワークのビュー部分を React で作るということも可能
 
 
-※ここでいう Component とは、 **見た目（css）と機能（JavaScript）を内包したHTMLの独自タグ** という解釈でとりあえずいいと思います
+※ここでいう Component とは、 **見た目（CSS）と機能（JavaScript）を内包したHTMLの独自タグ** という解釈でとりあえずいいと思います
 
-フレームワークやライブラリや言語によって Component という言葉が指すものが違うと思いますが、Webフロントの Component というと W3C で策定中の Web Components 的なもの
+フレームワークやライブラリや言語によって Component という言葉が指すものが違うと思いますが、 Web フロントの Component というと W3C で策定中の Web Components 的なもの
 
-* Shadow DOM => DOMのカプセル化
-* Custom Elements => HTML独自タグ
-* HTML Imports => HTML用require的な
-* HTML Templates => 標準仕様HTMLテンプレート
+* Shadow DOM => DOM のカプセル化
+* Custom Elements => HTML 独自タグ
+* HTML Imports => HTML 用 require 的な
+* HTML Templates => 標準仕様 HTML テンプレート
 
 [https://github.com/w3c/webcomponents/](https://github.com/w3c/webcomponents/)
 
@@ -105,7 +109,7 @@ DOM と対を成すツリー上の構造体を表したデータ（JavaScript �
 
 `body h1 a.link` の `href` 属性に差分が検出されると、
 
-`document.querySelector('a.link').setAttribute('href', '/new/link')`
+`document.querySelector('h1 a.link').setAttribute('href', '/new/link')`
 
 だけが走るイメージ
 
@@ -155,9 +159,11 @@ class Header extends React.Component {
 
 ```javascript
 render() {
-  return React.createElement('header', { className: 'header' },
-           React.createElement('h1', null, this.props.title)
-         );
+  return React.createElement(
+    'header',
+    { className: 'header' },
+    React.createElement('h1', null, this.props.title)
+  );
 }
 ```
 
@@ -165,29 +171,23 @@ render() {
 
 react@v0.14.0 以前では `react-tools` というツールで JS にコンパイルしてたが、現在は [Babel](https://babeljs.io/) の利用を推奨している (`react-tools` の更新は止まる)
 
-Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる
+Babel => JavaScript のトランスパイラ
 
 ES6について： [https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md](https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md)
-
-作者： [@sebmck](https://github.com/sebmck)
-
-Facebook に入社 => 現在18, 9歳
-
-react-europe 2015 で Babel について登壇 @sebmck [https://www.youtube.com/watch?v=OFuDvqZmUrE](https://www.youtube.com/watch?v=OFuDvqZmUrE)
 
 --
 
 ### サーバサイドレンダリング
 
-`react-dom` に React コンポーネントを文字列にして返すメソッドがある
+`react-dom` に React コンポーネントを HTML 文字列にして返すメソッドがある
 
 **`require('react-dom/server').renderToString()`**
 
-`require('react-dom/server').renderToStaticMarkup()` というのもあるけど、これは純粋な html 文字列が返される（React エレメントとして必要な data 属性等を含まない）
+`require('react-dom/server').renderToStaticMarkup()` というのもあるけど、これは純粋な HTML 文字列が返される（React エレメントとして必要な data 属性等を含まない）
 
-JS の評価エンジンさえあればサーバ側でレンダリングして html 文字列としてクライアントに返せる
+JS の評価エンジンさえあればサーバ側でレンダリングして HTML 文字列としてクライアントに返せる
 
-なので初回アクセス時はサーバでレンダリング済みの html を返して、みたいなことができるので SEO 的にも、 SPA の問題としてよくあがる初回表示の遅さもなんとかなる
+なので初回アクセス時はサーバでレンダリング済みの HTML を返して、みたいなことができるので SEO 的にも、 SPA の問題としてよくあがる初回表示の遅さもなんとかなる
 
 --
 
@@ -195,8 +195,8 @@ JS の評価エンジンさえあればサーバ側でレンダリングして h
 
 version
 
-* react v0.14
-* react-dom v0.14
+* react v16.2.0
+* react-dom v16.2.0
 
 --
 
@@ -213,9 +213,11 @@ class Hello extends Component {
 render(<Hello name="world" />, document.getElementById('root'));
 ```
 
-[http://codepen.io/sugarshin/pen/wKmPry](http://codepen.io/sugarshin/pen/wKmPry)
+[https://codepen.io/sugarshin/pen/dmRzGj](https://codepen.io/sugarshin/pen/dmRzGj)
 
-`React.createClass()` に `render` メソッドをもつオブジェクトを渡すことでも作成できる
+~~`React.createClass()` に `render` メソッドをもつオブジェクトを渡すことでも作成できる~~
+
+Deprecated + [別パッケージ](https://www.npmjs.com/package/create-react-class) になりました
 
 --
 
@@ -238,6 +240,8 @@ Component のビューとロジックの密結合について
 
 [https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/counter](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/counter)
 
+--
+
 ```javascript
 import React, { Component } from 'react';
 import { render } from 'react-dom';
@@ -248,19 +252,24 @@ class Counter extends Component {
     super();
 
     // 初期state（状態）をここで定義
-    // `React.createClass()` でコンポーネントを作る場合の `getInitialState()` と同じ
+    // `create-react-class` でコンポーネントを作る場合の `getInitialState()` と同義
     this.state = {
       count: 0
     };
   }
 
   render() {
-    // 必ず1つのコンポーネント（html）を返すようにする
+    // ~~必ず1つのコンポーネント（HTML）を返すようにする~~
+    // v16 から配列でも返せるようになった
+    // return [
+    //   <div key='foo'>foo</div>,
+    //   <div key='bar'>bar</div>,
+    // ]
     return (
       <div>
-        // `{}` はJavaScriptの式として評価してくれる
+        // `{}` は JavaScript の式として評価してくれる
         <span>{this.state.count}</span>
-        // DOMのイベントは 'on + イベント名' でハンドリングする
+        // DOM のイベントは 'on + イベント名' でハンドリングする
         <button onClick={::this.handleClickUp}>Count up</button>
         <button onClick={::this.handleClickDown}>Count down</button>
       </div>
@@ -269,7 +278,7 @@ class Counter extends Component {
 
   handleClickUp() {
     // `setState()` で自身の状態を更新する
-    // `this.state`を直接触らない
+    // `this.state` を直接触らない
     this.setState({ count: this.state.count + 1 });
   }
 
@@ -279,13 +288,13 @@ class Counter extends Component {
 
 }
 
-// 第1引数にマウントするコンポーネント、第2引数にマウント先のDOMの参照を渡してレンダリング
+// 第1引数にマウントするコンポーネント、第2引数にマウント先の DOM の参照を渡してレンダリング
 render(<Counter />, document.getElementById('root'));
 ```
 
 --
 
-* 1つのコンポーネントを返す
+* ~~1つのコンポーネントを返す~~
 * `state` で自身の状態を保持できる
 * `setState()` で `state` を更新すると `render()` が走ってレンダリングしてくれる
 * `props` で外部とやりとりもできる
@@ -297,21 +306,20 @@ render(<Counter />, document.getElementById('root'));
 react@v0.14 から `state` を持たない、 `props` だけに依存するようなコンポーネントの新しい定義の仕方ができるようになった
 
 ```javascript
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // コンポーネントを返すだけの関数として定義
-// 引数に props が渡ってくる
+// 引数に `props` が渡ってくる
 export default function Footer(props) {
   return <footer>{props.copyright}</footer>;
 }
 
-// propTypesやdefaultPropsも
+// propTypes や defaultProps も
 // 関数のプロパティとして定義できる
 Footer.propTypes = {
   copyright: PropTypes.string.isRequired
 };
-
-
 
 render(<Footer copyright="@sugarshin" />, document.getElementById('id'));
 ```
@@ -326,7 +334,7 @@ react@v0.15 ではパフォーマンス改善等のリリースになるよう�
 
 ### Todoアプリ
 
-簡単なTodoアプリのデモ
+簡単な Todo アプリのデモ
 
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
 
@@ -337,13 +345,14 @@ react@v0.15 ではパフォーマンス改善等のリリースになるよう�
 Todoコンポーネント
 
 ```javascript
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class Todo extends Component {
 
-  // 外部から受け取る`props`に対してそれぞれのバリデーションをスタティックプロパティとして定義できる
-  // エラーは投げられず、warningになるのみ
-  // しかもproduction環境では無視される
+  // 外部から受け取る`props`に対してそれぞれのランタイムチェックをスタティックプロパティとして定義できる
+  // エラーは投げられず、 Warning になるのみ
+  // Production 環境では無視される
   static propTypes = {
     id: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
@@ -355,14 +364,16 @@ export default class Todo extends Component {
   render() {
     const { complete, text } = this.props;
 
-    // 必ず1つのコンポーネント（html）を返す
+    // ~~必ず1つのコンポーネント（html）を返す~~
     return (
-      // インラインcssは`style`属性にオブジェクトを渡す
-      <div style={{
-        opacity: complete ? .5 : 1,
-        textDecoration: complete ? 'line-through' : 'none'
-      }}>
-        // 各DOMのイベントは `on + イベント名` みたいは感じでハンドリングする
+      // インライン CSS は `style` 属性にオブジェクトを渡す
+      <div
+        style={{
+          opacity: complete ? .5 : 1,
+          textDecoration: complete ? 'line-through' : 'none'
+        }}
+      >
+        // 各 DOM のイベントは `on + イベント名` みたいは感じでハンドリングする
         <input type="checkbox" checked={complete} onChange={::this.handleClickCheckbox} />
         <span>{text}</span>
         <button onClick={::this.handleClickDelete}>Delete</button>
@@ -384,7 +395,7 @@ export default class Todo extends Component {
 
 --
 
-AddTodoボタンコンポーネント
+AddTodo ボタンコンポーネント
 
 ```javascript
 import React, { Component } from 'react';
@@ -417,7 +428,8 @@ export default class AddTodo extends Component {
 TodoListコンポーネント
 
 ```javascript
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Todo from './Todo';
 
 export default class TodoList extends Component {
@@ -442,12 +454,14 @@ export default class TodoList extends Component {
   renderTodos() {
     const { onClickDelete, onClickCheckbox, todos } = this.props;
     return todos.map(todo => (
-      // `key`属性に一意の値を渡す
-      // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
-      <Todo key={todo.id}
-            onClickDelete={onClickDelete}
-            onClickCheckbox={onClickCheckbox}
-            { ...todo } />
+      // `key` 属性に一意の値を渡す
+      // 必須ではないけど Warning がでる、 diff/patch 処理が遅くなる
+      <Todo
+        key={todo.id}
+        onClickDelete={onClickDelete}
+        onClickCheckbox={onClickCheckbox}
+        { ...todo }
+      />
     ));
   }
 
@@ -472,8 +486,6 @@ export default class App extends Component {
 
   constructor() {
     super();
-
-    // 初期state
     this.state = {
       todos: []
     };
@@ -484,9 +496,11 @@ export default class App extends Component {
       <div>
         // propsとして各 DOM イベントのコールバックを渡す
         <AddTodo onClickAdd={::this.addTodo} />
-        <TodoList todos={this.state.todos}
-                  onClickDelete={::this.deleteTodo}
-                  onClickCheckbox={::this.changeComplete} />
+        <TodoList
+          todos={this.state.todos}
+          onClickDelete={::this.deleteTodo}
+          onClickCheckbox={::this.changeComplete}
+        />
       </div>
     );
   }
@@ -532,7 +546,7 @@ import App from './App';
 
 // 第2引数にマウント先のDOMを指定
 render(<App />, document.getElementById('root'));
-// document.bodyを指定するとwarningでるようになった
+// document.bodyを指定すると Warning でるようになった
 ```
 
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
@@ -547,9 +561,9 @@ render(<App />, document.getElementById('root'));
 
 例えば、
 
-* DOMに追加されたとき、される直前
-* renderが走ったあと
-* propsが更新される前
+* DOM に追加されたとき、される直前
+* render が走ったあと
+* props が更新される前
 
 などなど
 
@@ -601,7 +615,7 @@ class Button extends Component {
 
 ## Flux
 
-Reactとペアでよく話されるアーキテクチャのこと
+React とペアでよく話されるアーキテクチャのこと
 
 実装ではなくあくまでアーキテクチャの話
 
@@ -662,8 +676,8 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 主な層は
 
 * ActionCreator => アクション（だいたいの場合 `type` キーとそのアクションごとのデータをもったオブジェクト）を作って Dispatcher に送る
-* Dispatcher => 受けたアクションを Store の適切なところへ送る
-* Store => 送られてきたアクションを元に自身の state（アプリケーションの状態）を更新
+* Dispatcher => 受けたアクションを Store へ送る
+* Store => 送られてきたアクションを元に自身の State（アプリケーションの状態）を更新
 * View (React) => Store を listen しておいて、更新を検知し、適宜レンダリング
   * DOM イベント等を通じて ActionCreator を通してアクションを生成
 
@@ -671,7 +685,7 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 
 --
 
-### 簡単なFlux実装の例
+### 簡単な Flux 実装の例
 
 データの流れが一方向、というのがポイントの1つなので、それを簡単に再現
 
@@ -767,7 +781,7 @@ emitter.on('some', () => console.log('hoge'));
 emitter.emit('some'); // => 'hoge'
 ```
 
-ここでは Node の `require('events').EventEmitter` を使います
+ここでは Node.js の `require('events').EventEmitter` を使います
 
 --
 
@@ -893,7 +907,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 ### 特長
 
-* １つのオブジェクトでアプリケーション全体の状態を管理する
+* １つのオブジェクト (JSON) でアプリケーション全体の状態を管理する
 * シンプル 内部実装が読める
 * ドキュメントが電子ブック形式でチュートリアル形式でわかりやすい
 * Hot reloading
@@ -938,15 +952,15 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 5つのみ
 
 * `createStore`
-  * `reducer` を受け取ってstoreを作る
+  * `reducer` を受け取って store を作る
 * `combineReducers`
   * 複数の`reducer`を結合して1つにする
 * `bindActionCreators`
-  * `react-redux` 利用時などなにかしらのview層でreducerにアクションを送れるようにしてくれる (dispatch(someAction())みたいにしてくれる)
+  * `react-redux` 利用時などなにかしらの View 層で reducer にアクションを送れるようにしてくれる (dispatch(someAction())みたいにしてくれる)
 * `applyMiddleware`
-  * Middlewareの適用
+  * Middleware の適用
 * `compose`
-  * ユーティリティ Middlewareを適用したcreateStoreを作る際などに利用
+  * ユーティリティ, Middleware を適用した createStore を作る際などに利用
 
 ```javascript
 const result = func1(func2(func3(arg)));
@@ -971,19 +985,20 @@ export function addTodo(text) {
 }
 ```
 
-API叩くのもここ
+API 叩くのもここ
 
-非同期処理用のMiddleware使う
+非同期処理用の Middleware 使う
 
-[redux-thunk](https://github.com/gaearon/redux-thunk)
-
-[redux-promise](https://github.com/acdlite/redux-promise)
+- [redux-thunk](https://github.com/gaearon/redux-thunk)
+- [redux-saga](https://github.com/redux-saga/redux-saga)
+- [redux-observable](https://github.com/redux-observable/redux-observable)
+- [redux-promise](https://github.com/acdlite/redux-promise)
 
 --
 
 ### Reducer
 
-アクションを受け取って現在のstateをどう変更するか
+アクションを受け取って現在の State をどう変更するか
 
 受け取ったアクションの `type` によってどう変化させるか計算して、
 変化させるなら必ず新しいオブジェクトの参照を返す
@@ -1014,16 +1029,6 @@ export default function someReducer(state = initialState /* 現在のstate*/, ac
 }
 ```
 
-名前の由来
-
-Array#reduce
-
-```javascript
-const array = [1, 3, 6, 8];
-
-array.reduce((prev, current) => prev + current); // => 18
-```
-
 --
 
 ### Store
@@ -1044,14 +1049,6 @@ const store = createStore(someReducer);
 // store.dispatch()
   // reducerにアクションを送る
 ```
-
---
-
-### ディレクトリ一例
-
-* actions
-* components
-* reducers
 
 --
 
